@@ -5,6 +5,7 @@ import com.gmail.kulacholeg.JFSD_2022_09_11.dto.BookQueryDto;
 import com.gmail.kulacholeg.JFSD_2022_09_11.dto.BookSaveDto;
 import com.gmail.kulacholeg.JFSD_2022_09_11.dto.RestResponse;
 import com.gmail.kulacholeg.JFSD_2022_09_11.service.impl.BookServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestResponse createBook(@RequestBody BookSaveDto dto){
+    public RestResponse createBook(@Valid @RequestBody BookSaveDto dto){
         return new RestResponse(String.valueOf(bookService.createBook(dto)));
     }
 
@@ -30,7 +31,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public BookDetailsDto updateBook(@PathVariable int id,
+    public BookDetailsDto updateBook(@Valid @PathVariable int id,
                                      @RequestBody BookSaveDto dto){
         return bookService.updateBook(id, dto);
     }
