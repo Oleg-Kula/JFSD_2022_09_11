@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
         ErrorResponse response = new ErrorResponse(httpStatus.value(), httpStatus.getReasonPhrase(), message);
         return ResponseEntity.status(httpStatus.value()).body(response);
     }
-    
+
     @Getter
     @AllArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)

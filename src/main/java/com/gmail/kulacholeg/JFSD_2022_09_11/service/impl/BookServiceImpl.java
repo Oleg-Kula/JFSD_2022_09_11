@@ -19,6 +19,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final GenreRepository genreRepository;
+
     @Override
     public int createBook(BookSaveDto dto) {
         return bookRepository.save(bookDtoToBookEntity(dto, new BookEntity())).getId();
@@ -37,22 +38,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDetailsDto> search(BookQueryDto query){
+    public List<BookDetailsDto> search(BookQueryDto query) {
         List<BookDetailsDto> result;
 
-        if (query == null || (query.getAuthor() == null && query.getGenre() == null)){
+        if (query == null || (query.getAuthor() == null && query.getGenre() == null)) {
             result = checkListThenConvert(bookRepository.findAll());
-            if(query != null) result = paginate(result, query);
+            if (query != null) result = paginate(result, query);
             return result;
         }
-        if (query.getGenre() == null){
+        if (query.getGenre() == null) {
             result = checkListThenConvert(bookRepository.findByAuthor(query.getAuthor()));
             return paginate(result, query);
         }
 
         GenreEntity genre = genreRepository.findByNameIgnoreCase(query.getGenre());
 
-        if (query.getAuthor() == null){
+        if (query.getAuthor() == null) {
             result = checkListThenConvert(bookRepository.findByGenre(genre));
             return paginate(result, query);
         }
@@ -66,7 +67,7 @@ public class BookServiceImpl implements BookService {
         bookRepository.delete(getOrElseThrow(id));
     }
 
-    public BookEntity bookDtoToBookEntity(BookSaveDto dto, BookEntity entity){
+    public BookEntity bookDtoToBookEntity(BookSaveDto dto, BookEntity entity) {
         entity.setTitle(dto.getTitle());
         entity.setAuthor(dto.getAuthor());
         entity.setGenre(genreRepository.findById(dto.getGenreId())
@@ -74,7 +75,7 @@ public class BookServiceImpl implements BookService {
         return entity;
     }
 
-    public BookDetailsDto bookEntityToBookDto(BookEntity entity){
+    public BookDetailsDto bookEntityToBookDto(BookEntity entity) {
         return BookDetailsDto.builder()
                 .id(entity.getId())
                 .author(entity.getAuthor())
@@ -84,8 +85,8 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    public List<BookDetailsDto> checkListThenConvert(List<BookEntity> list){
-        if(list.isEmpty()) throw new NotFoundException("No items found");
+    public List<BookDetailsDto> checkListThenConvert(List<BookEntity> list) {
+        if (list.isEmpty()) throw new NotFoundException("No items found");
         return list.stream()
                 .map(this::bookEntityToBookDto)
                 .toList();
@@ -97,12 +98,12 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new IllegalArgumentException("No book with id %d".formatted(id)));
     }
 
-    public List<BookDetailsDto> paginate(List<BookDetailsDto> list, BookQueryDto query){
+    public List<BookDetailsDto> paginate(List<BookDetailsDto> list, BookQueryDto query) {
         Integer size = query.getSize();
         Integer page = query.getPage();
-        if(size == null || size <= 0) size = list.size();
-        if(page == null || page < 0) page = 0;
-        if(page*size > list.size()){
+        if (size == null || size <= 0) size = list.size();
+        if (page == null || page < 0) page = 0;
+        if (page * size > list.size()) {
             throw new NotFoundException("No items found");
         }
         return list.stream().skip((long) page * size).limit(size).toList();

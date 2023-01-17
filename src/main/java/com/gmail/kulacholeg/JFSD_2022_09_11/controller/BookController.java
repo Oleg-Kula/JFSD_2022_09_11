@@ -21,29 +21,29 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestResponse createBook(@Valid @RequestBody BookSaveDto dto){
+    public RestResponse createBook(@Valid @RequestBody BookSaveDto dto) {
         return new RestResponse(String.valueOf(bookService.createBook(dto)));
     }
 
     @GetMapping("/{id}")
-    public BookDetailsDto getBook(@PathVariable int id){
+    public BookDetailsDto getBook(@PathVariable int id) {
         return bookService.getBook(id);
     }
 
     @PutMapping("/{id}")
     public BookDetailsDto updateBook(@Valid @PathVariable int id,
-                                     @RequestBody BookSaveDto dto){
+                                     @RequestBody BookSaveDto dto) {
         return bookService.updateBook(id, dto);
     }
 
     @DeleteMapping("/{id}")
-    public RestResponse deleteBook(@PathVariable int id){
+    public RestResponse deleteBook(@PathVariable int id) {
         bookService.deleteBook(id);
         return new RestResponse("Deleted");
     }
 
     @PostMapping("/_search")
-    public List<BookDetailsDto> searchBook(@RequestBody(required = false) BookQueryDto query){
+    public List<BookDetailsDto> searchBook(@RequestBody(required = false) BookQueryDto query) {
         return bookService.search(query);
     }
 }

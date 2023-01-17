@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class GenreServiceImpl implements GenreService {
     private final GenreRepository genreRepository;
+
     @Override
     public List<GenreDto> getGenres() {
         return genreRepository.findAll().stream()
@@ -19,7 +21,7 @@ public class GenreServiceImpl implements GenreService {
                 .toList();
     }
 
-    public GenreDto entityToDto(GenreEntity entity){
+    public GenreDto entityToDto(GenreEntity entity) {
         return GenreDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())

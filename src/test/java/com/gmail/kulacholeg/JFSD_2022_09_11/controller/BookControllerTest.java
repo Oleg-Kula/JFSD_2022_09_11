@@ -70,9 +70,9 @@ class BookControllerTest {
     }
 
     @Test
-    void getBook() throws Exception{
+    void getBook() throws Exception {
         MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
-                .get("/api/books/1"))
+                        .get("/api/books/1"))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -84,7 +84,7 @@ class BookControllerTest {
     }
 
     @Test
-    void updateBook() throws Exception{
+    void updateBook() throws Exception {
         String title = "Test Title 5";
         String author = "Test Author 5";
         int genreId = 1;
@@ -111,7 +111,7 @@ class BookControllerTest {
     }
 
     @Test
-    void deleteBook() throws Exception{
+    void deleteBook() throws Exception {
         String body = """
                 {
                     "title": "Delete Book",
@@ -130,14 +130,14 @@ class BookControllerTest {
         mvc.perform(MockMvcRequestBuilders.delete("/api/books/" + bookId))
                 .andExpect(status().isOk())
                 .andReturn();
-        mvc.perform(MockMvcRequestBuilders.get("/api/books/" +bookId))
+        mvc.perform(MockMvcRequestBuilders.get("/api/books/" + bookId))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
     }
 
     @Test
-    void searchBook() throws Exception{
+    void searchBook() throws Exception {
         String author = "Test Author Search";
         String genre = "detective";
         String body = """
@@ -153,12 +153,12 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<BookDetailsDto> response =(List<BookDetailsDto>) parseResponse(mvcResult, List.class);
+        List<BookDetailsDto> response = (List<BookDetailsDto>) parseResponse(mvcResult, List.class);
 
         assertThat(response.size()).isEqualTo(3);
     }
 
-    private <T>T parseResponse(MvcResult mvcResult, Class<T> c) {
+    private <T> T parseResponse(MvcResult mvcResult, Class<T> c) {
         try {
             return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), c);
         } catch (JsonProcessingException | UnsupportedEncodingException e) {
