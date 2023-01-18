@@ -101,10 +101,14 @@ public class BookServiceImpl implements BookService {
     public List<BookDetailsDto> paginate(List<BookDetailsDto> list, BookQueryDto query) {
         Integer size = query.getSize();
         Integer page = query.getPage();
+
         if (size == null || size <= 0) size = list.size();
-        if (page == null || page < 0) page = 0;
+
+        if (page == null || page <= 0) page = 0;
+        else page -= 1;
+
         if (page * size > list.size()) {
-            throw new NotFoundException("No items found");
+            throw new IllegalArgumentException("Requested items are out of list");
         }
         return list.stream().skip((long) page * size).limit(size).toList();
     }
